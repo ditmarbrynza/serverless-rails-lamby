@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Hifromlamby
+
+Parameters:
+
+  RailsEnv:
+    Type: String
+    Default: staging
+    AllowedValues:
+      - staging
+      - production
+
+Globals:
+  Function:
+    Architectures:
+      - arm64
+    AutoPublishAlias: live
+    DeploymentPreference:
+      Type: AllAtOnce
+    Environment:
+      Variables:
+        RAILS_ENV: !Ref RailsEnv
+    Timeout: 30
+    VpcConfig:
+      SubnetIds:
+        - subnet-07e8129720e76276e
+        - subnet-0a72e575c588ba1ca
+        - subnet-02e155018261c03e5
+      SecurityGroupIds:
+        - sg-09feec1b0ca9aa2ef
+
+Resources:
+
+  RailsLambda:
+    Type: AWS::Serverless::Function
+    Metadata:
+      DockerContext: .
+      Dockerfile: Dockerfile
+      DockerTag: web
+    Properties:
+      FunctionUrlConfig:
+        AuthType: NONE
+      MemorySize: 1792
+      PackageType: Image
+
+Outputs:
+
+  RailsLambdaUrl:
+    Description: Lambda Function URL
+    Value: !GetAtt RailsLambdaUrl.FunctionUrl

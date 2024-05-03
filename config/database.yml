@@ -1,0 +1,16 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: hifromlamby-development
+
+test:
+  <<: *default
+  database: hifromlamby-test
+
+production:
+  <<: *default
+  url: postgres://postgres:Zaq1xsw2@database-1.c90u86gygbnq.eu-central-1.rds.amazonaws.com/hifromlamby-production
